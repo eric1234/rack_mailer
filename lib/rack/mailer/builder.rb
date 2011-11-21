@@ -4,9 +4,6 @@
 # * The from if not specified will use the "email" field from the params. If
 #   that is not specified the "to" address will be used.
 # * The subject will default to "Website Message"
-# * The data will be appendend to the body so you can set the body to provide
-#   an intro message. If no intro message is specified then
-#   "A message was received on the website:" will be used.
 class Rack::Mailer::Builder
   extend Forwardable
   extend Rack::Mailer::DslAccessor

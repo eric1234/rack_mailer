@@ -47,6 +47,5 @@ a variety of other config options:
 Features to add:
 
 * Support nested params
-* Support file uploads
 * Add spam protection
 * Add the ability to specify required fields and/or other validation

@@ -34,8 +34,9 @@ module Rack
     private
 
     def email params
-      @builder.message.deliver params
-      not @builder.message.bounced?
+      email = @builder.message.dup
+      email.deliver params
+      not email.bounced?
     end
 
     def output_or_redirect(path, message)

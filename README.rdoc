@@ -1,0 +1,52 @@
+= Description
+
+A rack end point for a contact form. Will put all the params in an
+e-mail sent to a pre-configured address.
+
+= Usage
+
+== Rack
+
+  Rack::Builder.app do
+    map '/mail_to' do
+      run Rack::Mailer.new {to 'joe@example.com'}
+    end
+  end
+
+== Rails
+
+  match '/mail_to' => Rack::Mailer.new {to 'joe@example.com'}
+
+Will send any forms posted to /mail_to to joe@example.com. There are also
+a variety of other config options:
+
+  match '/mail_to' => Rack::Mailer.new {
+
+    # E-mail notification properties
+    to 'joe@example.com'
+    from 'no-reply@example.com'
+    subject 'This just in!'
+    body 'Some info submitted:'
+
+    success_url '/success'
+    failure_url '/failure'
+
+    auto_responder do |params|
+      to params[:email]
+      from 'no-reply@example.com'
+      subject 'Your message was received'
+      body 'Your message was received. We may or may not get back to you :)'
+    end
+
+    # mail config
+    delivery_method :sendmail
+  }
+
+= Todo
+
+Features to add:
+
+* Support nested params
+* Support file uploads
+* Add spam protection
+* Add the ability to specify required fields and/or other validation

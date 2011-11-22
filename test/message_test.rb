@@ -8,7 +8,7 @@ class MessageTest < Test::Unit::TestCase
   def test_defaults
     email = Rack::Mailer::Message.new
     assert_equal 'Website Message', email.subject
-    assert_equal 'A message was received on the website:', email.body.to_s
+    assert_equal "A message was received on the website:\n\n", email.body.to_s
   end
 
   # Make sure we didn't fuck up Mail::Message

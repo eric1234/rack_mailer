@@ -28,15 +28,21 @@ a variety of other config options:
     subject 'This just in!'
     body 'Some info submitted:'
 
+    # What to do when done
     success_url '/success'
     failure_url '/failure'
 
+    # Message to automatically send to user that filled out form.
     auto_responder do |params|
-      to params[:email]
+      to params['email']
       from 'no-reply@example.com'
       subject 'Your message was received'
       body 'Your message was received. We may or may not get back to you :)'
     end
+
+    # Spam protection. Should not be filled out by end user and will be
+    # removed from the e-mail.
+    spam_field 'email2'
 
     # mail config
     delivery_method :sendmail
@@ -46,6 +52,6 @@ a variety of other config options:
 
 Features to add:
 
-* Support nested params
-* Add spam protection
-* Add the ability to specify required fields and/or other validation
+* Support nested params (i.e. activities[], activities[outdoor][], etc.)
+* Add the ability to specify required fields and/or other validation so we
+  don't have to rely on JavaScript validation.

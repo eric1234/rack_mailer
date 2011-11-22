@@ -14,20 +14,27 @@ module Rack
     def call env #:nodoc:
       params = Rack::Request.new(env).params
 
-      # Prefer explict specification. Then use what form says. Finally no order
-      order = @builder.order
-      order = params.delete('order').strip.split(/\s*,\s*/) if !order && params['order']
-      order ||= []
+      if @builder.spam_field
+        if (params[@builder.spam_field] || '').empty?
+          params.delete @builder.spam_field
+        else
+          err = <<ERR
+This submission was detected as spam. If this was not the case please
+contact us via some other means.
+ERR
+          return output_or_redirect err
+        end
+      end
 
-      if email reorder(params, order)
+      if email reorder(params)
         if @builder.auto_responder
           auto_response = Mail::Message.new
           auto_response.instance_exec params, &@builder.auto_responder
           auto_response.deliver
         end
-        output_or_redirect @builder.success_url, 'Successfully sent'
+        output_or_redirect 'Successfully sent', @builder.success_url
       else
-        output_or_redirect @builder.failure_url, 'Failed to send'
+        output_or_redirect 'Failed to send', @builder.failure_url
       end
     end
 
@@ -39,7 +46,7 @@ module Rack
       not email.bounced?
     end
 
-    def output_or_redirect(path, message)
+    def output_or_redirect(message, path=nil)
       if path
         [301, {'Location' => path}, []]
       else
@@ -47,7 +54,14 @@ module Rack
       end
     end
 
-    def reorder(params, order)
+    def reorder(params)
+      # Prefer explict specification.
+      order = @builder.order
+      # Then use what form says.
+      order = params.delete('order').strip.split(/\s*,\s*/) if !order && params['order']
+      # Finally no order
+      order ||= []
+
       params = params.dup
       reordered = []
       for field in order

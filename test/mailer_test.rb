@@ -67,8 +67,27 @@ MSG
     assert_equal 'Your message was received. We may or may not get back to you :)', email.body.to_s
   end
 
+  def test_spam
+    server {spam_field 'email'; success_url '/success'}
+    response = @mock.post('/', :params => {:url => 'http://www.google.com', :email => ''})
+    assert_equal 301, response.status
+    assert_equal '/success', response.headers['Location']
+    email = Mail::TestMailer.deliveries.last
+    assert_equal <<MSG.chop, email.body.to_s
+A message was received on the website:
+
+url: http://www.google.com
+MSG
+
+    Mail::TestMailer.deliveries.clear
+    response = @mock.post('/', :params => {:url => 'http://www.google.com', :email => 'hacker@example.com'})
+    assert_equal 200, response.status
+    assert_match /spam/i, response.body
+    assert Mail::TestMailer.deliveries.empty?
+  end
+
   # FIXME: Unsure how to test this as I don't know the reason a message could
-  #        be bounced. Maybe once we add validation we can test this better.
+  #        be bounced.
   #def test_failure
   #end
 

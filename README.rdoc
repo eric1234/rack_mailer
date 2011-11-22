@@ -3,6 +3,24 @@
 A rack end point for a contact form. Will put all the params in an
 e-mail sent to a pre-configured address.
 
+= Features
+
+* Build on the mail gem allowing us to take advantage of well tested e-mail
+  construction and build on it's excellent API.
+* Will send any data posted via a web form to the configured address
+* Reasonble defaults for everything except where the mail should be sent to
+  allowing quick implementation.
+* Ability to configure auto-responder to poster
+* Basic spam protection
+
+Why use this over ActionMailer or the mail gem itself?
+
+* ActionMailer is often overkill for what is often an e-mail to an person
+  internal to an organization that just needs the info without fancy formatting.
+* The mail gem is obviously the core of this rack module. But this allows for
+  you to get the form up and running much quicker as it has minimal
+  configuration and it can actually process multiple different forms.
+
 = Usage
 
 == Rack
@@ -17,8 +35,11 @@ e-mail sent to a pre-configured address.
 
   match '/mail_to' => Rack::Mailer.new {to 'joe@example.com'}
 
-Will send any forms posted to /mail_to to joe@example.com. There are also
-a variety of other config options:
+Will send any forms posted to /mail_to to joe@example.com.
+
+== Configuration
+
+There are also a variety of other config options:
 
   match '/mail_to' => Rack::Mailer.new {
 

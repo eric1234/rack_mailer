@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rack_mailer'
-  s.version = '0.0.5'
+  s.version = '0.0.6'
   s.author = 'Eric Anderson'
   s.email = 'eric@pixelwareinc.com'
   s.add_dependency 'rack'

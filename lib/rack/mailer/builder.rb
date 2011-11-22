@@ -10,7 +10,7 @@ class Rack::Mailer::Builder
 
   # The deliver message that the builder is managing
   attr_reader :message
-  def_delegators :@message, :to, :from, :subject, :delivery_method
+  def_delegators :@message, :to, :from, :subject, :body, :delivery_method
 
   # The URL to send the user after an attempted delivery. If not specified
   # then just a simple success/failure message is outputted. Also have an

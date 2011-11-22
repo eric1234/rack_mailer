@@ -7,6 +7,7 @@ class Rack::Mailer::Message < Mail::Message
   def initialize *args, &blk
     super *args do
       subject "Website Message"
+      body "A message was received on the website:\n\n"
     end
     instance_eval &blk if block_given?
   end
@@ -17,7 +18,7 @@ class Rack::Mailer::Message < Mail::Message
   def deliver params=[]
     self.from ||= params.assoc('email').last if params.assoc('email')
     self.from ||= to
-    self.body = data(params)
+    self.body = self.body.to_s + data(params)
     super()
   end
 

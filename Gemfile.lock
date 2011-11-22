@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rack_mailer (0.0.4)
+    rack_mailer (0.0.5)
       mail
       rack
 

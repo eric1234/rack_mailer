@@ -14,7 +14,9 @@ module Rack
     def call env #:nodoc:
       params = Rack::Request.new(env).params
 
-      return output_or_redirect "Spam detected." if spam? params
+      return output 'Invalid submission.' if invalid? params
+
+      return output "Spam detected." if spam? params
 
       if email reorder(params)
         if @builder.auto_responder
@@ -30,6 +32,11 @@ module Rack
 
     private
 
+    # Do a bit of filtering for likely invalid submissions
+    def invalid? params
+      params.empty?
+    end
+
     def spam? params
       return false unless @builder.spam_field
       spam_value = params.delete(@builder.spam_field) || ''
@@ -42,12 +49,20 @@ module Rack
       not email.bounced?
     end
 
-    def output_or_redirect message, path=nil
+    def output_or_redirect message, path
       if path
-        [301, {'Location' => path}, []]
+        redirect path
       else
-        [200, {'Content-Type' => 'text/html'}, [message]]
+        output message
       end
+    end
+
+    def redirect path
+      [301, {'Location' => path}, []]
+    end
+
+    def output message
+      [200, {'Content-Type' => 'text/html'}, [message]]
     end
 
     def reorder params

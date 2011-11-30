@@ -45,7 +45,7 @@ MSG
 
   def test_custom_destination
     server {success_url '/success'}
-    response = @mock.post('/')
+    response = @mock.post('/', :params => {:foo => 'bar'})
     assert_equal 301, response.status
     assert_equal '/success', response.headers['Location']
   end
@@ -84,6 +84,14 @@ MSG
     assert_equal 200, response.status
     assert_match /spam/i, response.body
     assert Mail::TestMailer.deliveries.empty?
+  end
+
+  def test_invalid
+    server
+    before = Mail::TestMailer.deliveries.size
+    response = @mock.post('/')
+    assert_equal Mail::TestMailer.deliveries.size, before
+    assert_equal 200, response.status
   end
 
   # FIXME: Unsure how to test this as I don't know the reason a message could

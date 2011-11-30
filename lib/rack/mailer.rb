@@ -14,17 +14,7 @@ module Rack
     def call env #:nodoc:
       params = Rack::Request.new(env).params
 
-      if @builder.spam_field
-        if (params[@builder.spam_field] || '').empty?
-          params.delete @builder.spam_field
-        else
-          err = <<ERR
-This submission was detected as spam. If this was not the case please
-contact us via some other means.
-ERR
-          return output_or_redirect err
-        end
-      end
+      return output_or_redirect "Spam detected." if spam? params
 
       if email reorder(params)
         if @builder.auto_responder
@@ -40,13 +30,19 @@ ERR
 
     private
 
+    def spam? params
+      return false unless @builder.spam_field
+      spam_value = params.delete(@builder.spam_field) || ''
+      !spam_value.empty?
+    end
+
     def email params
       email = @builder.message.dup
       email.deliver params
       not email.bounced?
     end
 
-    def output_or_redirect(message, path=nil)
+    def output_or_redirect message, path=nil
       if path
         [301, {'Location' => path}, []]
       else
@@ -54,7 +50,7 @@ ERR
       end
     end
 
-    def reorder(params)
+    def reorder params
       # Prefer explict specification.
       order = @builder.order
       # Then use what form says.

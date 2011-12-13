@@ -8,9 +8,8 @@ class Rack::Mailer::Builder
   extend Forwardable
   extend Rack::Mailer::DslAccessor
 
-  # The deliver message that the builder is managing
-  attr_reader :message
-  def_delegators :@message, :to, :from, :subject, :body, :delivery_method
+  # A template message that all messages are based on.
+  def_delegators :@template_message, :to, :from, :subject, :body, :delivery_method
 
   # The URL to send the user after an attempted delivery. If not specified
   # then just a simple success/failure message is outputted.
@@ -37,7 +36,13 @@ class Rack::Mailer::Builder
   dsl_accessor :spam_field
 
   def initialize
-    @message = Rack::Mailer::Message.new
+    @template_message = Rack::Mailer::Message.new
+  end
+
+  # Will clone the template message to provide a new message we can send.
+  def new_message
+    # Marshal hack as clone doesn't deep clone.
+    Marshal.load Marshal.dump(@template_message)
   end
 
   # Allows an auto_responder to be configured. The block will be executed in

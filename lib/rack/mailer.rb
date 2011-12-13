@@ -44,7 +44,7 @@ module Rack
     end
 
     def email params
-      email = @builder.message.dup
+      email = @builder.new_message
       email.deliver params
       not email.bounced?
     end

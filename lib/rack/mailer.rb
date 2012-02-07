@@ -58,7 +58,7 @@ module Rack
     end
 
     def redirect path
-      [301, {'Location' => path}, []]
+      [301, {'Location' => path, 'Content-Type' => ''}, []]
     end
 
     def output message

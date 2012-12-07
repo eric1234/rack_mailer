@@ -42,7 +42,7 @@ class Rack::Mailer::Builder
 
   def initialize
     @template_message = Rack::Mailer::Message.new
-    self.field_filter = %w(authenticity_token utf8 _method)
+    self.field_filter = %w(authenticity_token utf8 _method commit)
   end
 
   # Will clone the template message to provide a new message we can send.

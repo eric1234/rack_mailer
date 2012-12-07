@@ -65,6 +65,10 @@ There are also a variety of other config options:
     # removed from the e-mail.
     spam_field 'email2'
 
+    # Will ignore a field name ignore. Default to ignoring some
+    # auto-generated Rails fields.
+    field_filter << 'ignore'
+
     # mail config
     delivery_method :sendmail
   }
@@ -74,5 +78,5 @@ There are also a variety of other config options:
 Features to add:
 
 * Support nested params (i.e. activities[], activities[outdoor][], etc.)
-* Add the ability to specify required fields and/or other validation so we
-  don't have to rely on JavaScript validation.
+* Add the ability to specify required fields and/or other validation so
+  we don't have to rely on JavaScript validation.

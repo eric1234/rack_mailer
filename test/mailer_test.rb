@@ -94,8 +94,19 @@ MSG
     assert_equal 200, response.status
   end
 
-  # FIXME: Unsure how to test this as I don't know the reason a message could
-  #        be bounced.
+  def test_filter
+    server {field_filter << 'ignore'}
+    @mock.post('/', :params => {:real => 'value', :utf8 => 'check', :ignore => 'value'})
+    email = Mail::TestMailer.deliveries.last
+    assert_equal <<MSG.chop, email.body.to_s
+A message was received on the website:
+
+real: value
+MSG
+  end
+
+  # FIXME: Unsure how to test this as I don't know the reason a message
+  #        could be bounced.
   #def test_failure
   #end
 

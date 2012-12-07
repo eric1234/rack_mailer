@@ -18,6 +18,7 @@ module Rack
 
       return output "Spam detected." if spam? params
 
+      filter params
       if email reorder(params)
         if @builder.auto_responder
           auto_response = Mail::Message.new
@@ -31,6 +32,10 @@ module Rack
     end
 
     private
+
+    def filter params
+      @builder.field_filter.each {|f| params.delete f}
+    end
 
     # Do a bit of filtering for likely invalid submissions
     def invalid? params

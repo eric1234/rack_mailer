@@ -13,7 +13,7 @@ class Rack::Mailer::Builder
 
   # The URL to send the user after an attempted delivery. If not specified
   # then just a simple success/failure message is outputted.
-  dsl_accessor :success_url, :failure_url, :order, :spam_field
+  dsl_accessor :success_url, :failure_url
 
   # Controls the order they appear in the e-mail. You can also specify this
   # via the form if that is easier using a param called "order"
@@ -35,8 +35,14 @@ class Rack::Mailer::Builder
   # Also set the tabindex to -1 so the user won't accidently tab to this field.
   dsl_accessor :spam_field
 
+  # Fields that should be removed before the e-mail is assembed. Useful
+  # for removing auto-generated fields like authenticity_token in Rails.
+  # Defaults to a few Rails might set
+  dsl_accessor :field_filter
+
   def initialize
     @template_message = Rack::Mailer::Message.new
+    self.field_filter = %w(authenticity_token utf8 _method)
   end
 
   # Will clone the template message to provide a new message we can send.

@@ -68,9 +68,6 @@ There are also a variety of other config options:
     # Will ignore a field name ignore. Default to ignoring some
     # auto-generated Rails fields.
     field_filter << 'ignore'
-
-    # mail config
-    delivery_method :sendmail
   }
 
 = Todo

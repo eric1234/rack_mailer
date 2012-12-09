@@ -7,11 +7,17 @@ module Rack
 
     # The mailer middleware. See Rack::Mailer::Builder for config options.
     def initialize &blk
-      @builder = Builder.new
-      @builder.instance_eval &blk
+      @config = blk
     end
 
     def call env #:nodoc:
+      dup._call env
+    end
+
+    def _call env #:nodoc:
+      @builder = Builder.new
+      @builder.instance_eval &@config
+
       params = Rack::Request.new(env).params
 
       return output 'Invalid submission.' if invalid? params
@@ -37,7 +43,7 @@ module Rack
       @builder.field_filter.each {|f| params.delete f}
     end
 
-    # Do a bit of filtering for likely invalid submissions
+    # Filtering for likely invalid submissions
     def invalid? params
       params.empty?
     end
@@ -49,9 +55,8 @@ module Rack
     end
 
     def email params
-      email = @builder.new_message
-      email.deliver params
-      not email.bounced?
+      @builder.message.deliver params
+      not @builder.message.bounced?
     end
 
     def output_or_redirect message, path

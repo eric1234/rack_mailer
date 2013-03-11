@@ -12,7 +12,7 @@ class Rack::Mailer::Builder
 
   # A template message that all messages are based on.
   def_delegators :message,
-    :to, :from, :subject, :body, :text_part, :html_part
+    :to, :from, :subject, :body, :text_part, :html_part, :delivery_method
 
   # The URL to send the user after an attempted delivery. If not specified
   # then just a simple success/failure message is outputted.

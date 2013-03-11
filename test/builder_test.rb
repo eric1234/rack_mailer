@@ -22,4 +22,11 @@ class BuilderTest < Test::Unit::TestCase
     assert_equal 'foo', b.auto_responder.call
   end
 
+  def test_delivery_method
+    b = Rack::Mailer::Builder.new
+    b.delivery_method Mail::Message, api_key: "secret"
+    assert b.delivery_method.kind_of?(Mail::Message)
+    assert_equal "secret", b.delivery_method.header[:api_key].to_s
+  end
+
 end

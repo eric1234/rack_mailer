@@ -74,6 +74,6 @@ There are also a variety of other config options:
 
 Features to add:
 
-* Support nested params (i.e. activities[], activities[outdoor][], etc.)
+* Support nested params (i.e. activities[outdoor][], etc.)
 * Add the ability to specify required fields and/or other validation so
   we don't have to rely on JavaScript validation.

@@ -32,6 +32,7 @@ class Rack::Mailer::Message < Mail::Message
       if is_upload? value
         attachments[value[:filename]] = value[:tempfile].read
       else
+        value = value * ', ' if Array === value
         text << "#{key}: #{value}"
       end
     end
